@@ -1193,7 +1193,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inimigos:
   - {fileID: 740005996008132915, guid: 6bdd79eb31a9efa4493c9d15fc444821, type: 3}
-  frutaPrefab: {fileID: 0}
+  frutaPrefab: {fileID: 7787622620399585711, guid: 0084db80df8f892498ad7e74428ea24b, type: 3}
   minTime: 1
   maxTime: 3
   frutasAposXInimigos: 3
@@ -1300,7 +1300,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inimigos:
   - {fileID: 8026815665068269949, guid: b58b92bf99ee46445ae3da96f0f74234, type: 3}
-  frutaPrefab: {fileID: 0}
+  frutaPrefab: {fileID: 7787622620399585711, guid: 0084db80df8f892498ad7e74428ea24b, type: 3}
   minTime: 1
   maxTime: 3
   frutasAposXInimigos: 3
