@@ -515,7 +515,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cam: {fileID: 519420028}
-  parallaxEffect: 12
+  parallaxEffect: 1
 --- !u!1 &422731375
 GameObject:
   m_ObjectHideFlags: 0
@@ -892,7 +892,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cam: {fileID: 519420028}
-  parallaxEffect: 10
+  parallaxEffect: 1
 --- !u!1 &633728155
 GameObject:
   m_ObjectHideFlags: 0
@@ -1162,6 +1162,56 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &848891764
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 848891766}
+  - component: {fileID: 848891765}
+  m_Layer: 0
+  m_Name: GeradorChao
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &848891765
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 848891764}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07328245f4facbc4aa45d72f466fc980, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inimigos:
+  - {fileID: 740005996008132915, guid: 6bdd79eb31a9efa4493c9d15fc444821, type: 3}
+  frutaPrefab: {fileID: 0}
+  minTime: 1
+  maxTime: 3
+  frutasAposXInimigos: 3
+--- !u!4 &848891766
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 848891764}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 11.37, y: -3.88, z: -0.010935148}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &935699518
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1219,6 +1269,56 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4527984cafc62a14490b5430a1554854, type: 3}
+--- !u!1 &1006228200
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1006228202}
+  - component: {fileID: 1006228201}
+  m_Layer: 0
+  m_Name: GeradorAr
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1006228201
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1006228200}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07328245f4facbc4aa45d72f466fc980, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inimigos:
+  - {fileID: 8026815665068269949, guid: b58b92bf99ee46445ae3da96f0f74234, type: 3}
+  frutaPrefab: {fileID: 0}
+  minTime: 1
+  maxTime: 3
+  frutasAposXInimigos: 3
+--- !u!4 &1006228202
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1006228200}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 11, y: 0.57, z: -0.010935148}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1063036624
 GameObject:
   m_ObjectHideFlags: 0
@@ -1480,7 +1580,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cam: {fileID: 519420028}
-  parallaxEffect: 7
+  parallaxEffect: 1
 --- !u!1 &1095347900
 GameObject:
   m_ObjectHideFlags: 0
@@ -2018,7 +2118,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cam: {fileID: 519420028}
-  parallaxEffect: 6
+  parallaxEffect: 1
 --- !u!1 &1491027493
 GameObject:
   m_ObjectHideFlags: 0
@@ -2192,6 +2292,58 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4861504983511626698, guid: 4527984cafc62a14490b5430a1554854, type: 3}
   m_PrefabInstance: {fileID: 935699518}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1827617939
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1827617941}
+  - component: {fileID: 1827617940}
+  m_Layer: 0
+  m_Name: GameManeger
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1827617940
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1827617939}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2661f93ac8a1d244e98bf0948cbbf293, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  frutasColetadas: 0
+  frutasParaVencer: 10
+  vidaAtual: 3
+  vidaMaxima: 3
+  frutasText: {fileID: 0}
+  vidaText: {fileID: 0}
+  telaVitoria: {fileID: 0}
+  telaDerrota: {fileID: 0}
+--- !u!4 &1827617941
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1827617939}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.035299927, y: -1.1124213, z: -0.010935148}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1873415885
 GameObject:
   m_ObjectHideFlags: 0
@@ -2376,7 +2528,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cam: {fileID: 519420028}
-  parallaxEffect: 20
+  parallaxEffect: 1
 --- !u!1 &1945678431
 GameObject:
   m_ObjectHideFlags: 0
@@ -2561,7 +2713,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cam: {fileID: 519420028}
-  parallaxEffect: 8
+  parallaxEffect: 1
 --- !u!1 &1985811451
 GameObject:
   m_ObjectHideFlags: 0
@@ -2839,3 +2991,6 @@ SceneRoots:
   - {fileID: 145860323}
   - {fileID: 1065263859}
   - {fileID: 935699518}
+  - {fileID: 1006228202}
+  - {fileID: 848891766}
+  - {fileID: 1827617941}

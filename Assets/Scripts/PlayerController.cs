@@ -2,127 +2,91 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody2D))]
 public class PlayerController : MonoBehaviour
 {
-    // === COMPONENTES PRINCIPAIS ===
-    private Rigidbody2D rb;
-    private Animator anim;
-    private SpriteRenderer sr;
-
-    // === MOVIMENTO ===
-    public float moveSpeed = 5f;
+    [Header("Movimento")]
+    public float forwardSpeed = 5f;   // velocidade constante para frente
     public float jumpForce = 8f;
-    private float horizontalInput;
+    private Rigidbody2D rb;
 
-    // === CHECAGEM DE CHÃO ===
+    [Header("Vida")]
+    public int maxHealth = 3;
+    public int currentHealth;
+
+    [Header("Ground Check")]
     public Transform groundCheck;
-    public float groundCheckRadius = 0.2f;
+    public float groundCheckRadius = 0.12f;
     public LayerMask groundLayer;
     private bool isGrounded;
 
-    // === ESTADO DO PLAYER ===
-    private bool isFacingRight = true;
-    private bool isAlive = true;
+    [Header("FX")]
+    public GameObject coletaParticlesPrefab;
+    public GameObject danoParticlesPrefab;
 
-    // === SISTEMA DE VIDA ===
-    public int maxHealth = 3;
-    private int currentHealth;
-
-    // === ANIMAÇÃO ===
-    // Parâmetros do Animator:
-    // "Speed" (float), "IsGrounded" (bool), "Damage" (trigger)
-
-    void Start()
+    void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        anim = GetComponent<Animator>();
-        sr = GetComponent<SpriteRenderer>();
         currentHealth = maxHealth;
     }
 
     void Update()
     {
-        if (!isAlive) return;
-
-        // Entrada horizontal (setas ou A/D)
-        horizontalInput = Input.GetAxisRaw("Horizontal");
-
-        // Movimento do personagem
-        rb.velocity = new Vector2(horizontalInput * moveSpeed, rb.velocity.y);
-
-        // Checagem de chão
-        isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
+        // Verifica se está no chão
+        if (groundCheck != null)
+            isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
 
         // Pulo
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
-            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+            rb.velocity = new Vector2(rb.velocity.x, 0f);
+            rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
         }
-
-        // Virar o personagem conforme a direção
-        if (horizontalInput > 0 && !isFacingRight)
-            Flip();
-        else if (horizontalInput < 0 && isFacingRight)
-            Flip();
-
-        // === Atualizar o Animator ===
-        anim.SetFloat("Speed", Mathf.Abs(rb.velocity.x));
-        anim.SetBool("IsGrounded", isGrounded);
     }
 
-    // === FUNÇÃO DE DANO ===
-    public void TakeDamage(int damage)
+    void FixedUpdate()
     {
-        if (!isAlive) return;
+        // Movimento contínuo para frente
+        rb.velocity = new Vector2(forwardSpeed, rb.velocity.y);
+    }
 
-        currentHealth -= damage;
-        anim.SetTrigger("Damage");
+    public void TakeDamage(int dmg)
+    {
+        currentHealth -= dmg;
+        if (danoParticlesPrefab != null)
+            Instantiate(danoParticlesPrefab, transform.position, Quaternion.identity);
 
         if (currentHealth <= 0)
-        {
             Die();
+    }
+
+    void Die()
+    {
+        Debug.Log("Fofuxo morreu!");
+        gameObject.SetActive(false);
+        GameManager.instance.GameOver();
+    }
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Fruta"))
+        {
+            // Recupera vida
+            currentHealth = Mathf.Min(currentHealth + 1, maxHealth);
+
+            if (coletaParticlesPrefab != null)
+                Instantiate(coletaParticlesPrefab, transform.position, Quaternion.identity);
+
+            GameManager.instance.AddFruit(1);
+            Destroy(other.gameObject);
         }
     }
 
-    // === MORTE DO PLAYER ===
-    private void Die()
+    void OnCollisionEnter2D(Collision2D col)
     {
-        isAlive = false;
-        rb.velocity = Vector2.zero;
-        // Aqui você pode adicionar uma animação ou tela de derrota
-        Debug.Log("Fofuxo foi derrotado!");
-    }
-
-    // === FUNÇÃO PARA COLETAR ITENS ===
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Fruit"))
+        if (col.collider.CompareTag("Inimigo"))
         {
-            // Exemplo: coleta de frutas
-            Debug.Log("Fofuxo coletou uma fruta!");
-            Destroy(collision.gameObject);
-        }
-        else if (collision.CompareTag("Enemy"))
-        {
-            // Sofre dano ao colidir com inimigos
             TakeDamage(1);
-        }
-    }
-
-    // === FUNÇÃO AUXILIAR PARA VIRAR O SPRITE ===
-    private void Flip()
-    {
-        isFacingRight = !isFacingRight;
-        transform.localScale = new Vector3(transform.localScale.x * -1, transform.localScale.y, transform.localScale.z);
-    }
-
-    // === DEBUG VISUAL (aparece na cena para ver o GroundCheck) ===
-    private void OnDrawGizmosSelected()
-    {
-        if (groundCheck != null)
-        {
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
         }
     }
 }
