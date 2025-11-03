@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using TMPro;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
@@ -15,8 +16,8 @@ public class GameManager : MonoBehaviour
     public int vidaMaxima = 3;
 
     [Header("Interface (UI)")]
-    public Text frutasText;
-    public Text vidaText;
+    public TextMeshProUGUI frutasText;
+    public TextMeshProUGUI vidaText;
     public GameObject telaVitoria;
     public GameObject telaDerrota;
 
@@ -46,6 +47,7 @@ public class GameManager : MonoBehaviour
         if (!jogoAtivo) return;
 
         vidaAtual -= dano;
+        vidaAtual = Mathf.Max(vidaAtual, 0); // evita valores negativos
         AtualizarUI();
 
         if (vidaAtual <= 0)
@@ -56,6 +58,8 @@ public class GameManager : MonoBehaviour
 
     public void RecuperarVida(int qtd)
     {
+        if (!jogoAtivo) return;
+
         vidaAtual = Mathf.Min(vidaAtual + qtd, vidaMaxima);
         AtualizarUI();
     }
@@ -91,6 +95,7 @@ public class GameManager : MonoBehaviour
         Debug.Log("Game Over!");
         if (telaDerrota != null)
             telaDerrota.SetActive(true);
+        Time.timeScale = 0f; // pausa o jogo
     }
 
     public void Vitoria()
@@ -99,10 +104,12 @@ public class GameManager : MonoBehaviour
         Debug.Log("Vitória!");
         if (telaVitoria != null)
             telaVitoria.SetActive(true);
+        Time.timeScale = 0f;
     }
 
     public void ReiniciarCena()
     {
+        Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
