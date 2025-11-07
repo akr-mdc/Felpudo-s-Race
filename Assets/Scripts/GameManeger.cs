@@ -1,115 +1,108 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.SceneManagement;
-using TMPro;
 using UnityEngine.UI;
+using UnityEngine;
+using TMPro;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
-    [Header("Status do Player")]
+    [Header("Configurações")]
     public int frutasColetadas = 0;
     public int frutasParaVencer = 10;
-    public int vidaAtual = 3;
     public int vidaMaxima = 3;
+    public int vidaAtual;
 
-    [Header("Interface (UI)")]
+    [Header("UI (TextMeshProUGUI)")]
     public TextMeshProUGUI frutasText;
     public TextMeshProUGUI vidaText;
+
+    [Header("Telas")]
     public GameObject telaVitoria;
     public GameObject telaDerrota;
 
-    private bool jogoAtivo = true;
+    bool jogoAtivo = true;
 
     void Awake()
     {
         if (instance == null)
         {
             instance = this;
-            DontDestroyOnLoad(gameObject); // persiste entre cenas
+            DontDestroyOnLoad(gameObject);
         }
-        else
-        {
-            Destroy(gameObject);
-        }
+        else Destroy(gameObject);
     }
 
     void Start()
     {
+        vidaAtual = Mathf.Clamp(vidaAtual, 0, vidaMaxima);
         AtualizarUI();
     }
 
-    // ---- VIDA ----
-    public void TomarDano(int dano)
+    public void AddFruta(int qtd)
     {
         if (!jogoAtivo) return;
-
-        vidaAtual -= dano;
-        vidaAtual = Mathf.Max(vidaAtual, 0); // evita valores negativos
+        frutasColetadas += qtd;
         AtualizarUI();
-
-        if (vidaAtual <= 0)
-        {
-            GameOver();
-        }
+        if (frutasColetadas >= frutasParaVencer) Vitoria();
     }
+
+    public void AddFruit(int qtd)
+    {
+        AddFruta(qtd);
+    }
+
 
     public void RecuperarVida(int qtd)
     {
         if (!jogoAtivo) return;
-
         vidaAtual = Mathf.Min(vidaAtual + qtd, vidaMaxima);
         AtualizarUI();
     }
 
-    // ---- FRUTAS ----
-    public void AddFruit(int qtd)
+    public void TomarDano(int dano)
     {
         if (!jogoAtivo) return;
-
-        frutasColetadas += qtd;
+        vidaAtual -= dano;
         AtualizarUI();
-
-        if (frutasColetadas >= frutasParaVencer)
-        {
-            Vitoria();
-        }
+        if (vidaAtual <= 0) Derrota();
     }
 
-    // ---- UI ----
-    void AtualizarUI()
+    public void AtualizarUI()
     {
-        if (frutasText != null)
-            frutasText.text = "Frutas: " + frutasColetadas + "/" + frutasParaVencer;
-
-        if (vidaText != null)
-            vidaText.text = "Vida: " + vidaAtual + "/" + vidaMaxima;
+        if (frutasText != null) frutasText.text = $"Frutas: {frutasColetadas}/{frutasParaVencer}";
+        if (vidaText != null) vidaText.text = $"Vida: {vidaAtual}/{vidaMaxima}";
     }
 
-    // ---- ESTADOS DO JOGO ----
-    public void GameOver()
+    void Vitoria()
     {
         jogoAtivo = false;
-        Debug.Log("Game Over!");
-        if (telaDerrota != null)
-            telaDerrota.SetActive(true);
-        Time.timeScale = 0f; // pausa o jogo
-    }
-
-    public void Vitoria()
-    {
-        jogoAtivo = false;
-        Debug.Log("Vitória!");
-        if (telaVitoria != null)
-            telaVitoria.SetActive(true);
         Time.timeScale = 0f;
+        if (telaVitoria != null) telaVitoria.SetActive(true);
+        Debug.Log("VITÓRIA");
     }
 
+    void Derrota()
+    {
+        jogoAtivo = false;
+        Time.timeScale = 0f;
+        if (telaDerrota != null) telaDerrota.SetActive(true);
+        Debug.Log("DERROTA");
+    }
+
+    // métodos utilitários para UI (botões)
     public void ReiniciarCena()
     {
         Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void IrMenu()
+    {
+        Time.timeScale = 1f;
+        // carregar cena de menu se houver (troque o nome)
+        SceneManager.LoadScene("MainMenu");
     }
 }

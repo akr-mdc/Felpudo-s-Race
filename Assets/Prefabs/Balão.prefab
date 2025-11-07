@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 7849957925913513953}
   - component: {fileID: 875435744700519454}
   - component: {fileID: 265017401743862079}
+  - component: {fileID: -8560639652163169245}
   m_Layer: 0
   m_Name: "Bal\xE3o"
   m_TagString: Inimigo
@@ -117,14 +118,14 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8026815665068269949}
-  m_BodyType: 1
+  m_BodyType: 0
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 0
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -135,7 +136,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!70 &875435744700519454
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -165,7 +166,7 @@ CapsuleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -184,3 +185,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dano: 1
+--- !u!114 &-8560639652163169245
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8026815665068269949}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f95ec47179c3ba41ab225c8a483e399, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 3
+  dano: 1
+  lifeTime: 8
+  useTrigger: 1

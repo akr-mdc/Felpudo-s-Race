@@ -12,7 +12,9 @@ GameObject:
   - component: {fileID: 321753175969710687}
   - component: {fileID: 2819413041725278859}
   - component: {fileID: 553481235009041232}
+  - component: {fileID: -7886849337400563096}
   - component: {fileID: 4995174424098701952}
+  - component: {fileID: 7125582062409681285}
   m_Layer: 0
   m_Name: Avocado
   m_TagString: Fruta
@@ -29,8 +31,8 @@ Transform:
   m_GameObject: {fileID: 7787622620399585711}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -1.6127, y: -1.8118, z: 0}
+  m_LocalScale: {x: 0.3181, y: 0.2767, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -143,6 +145,33 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 2.505
+--- !u!50 &-7886849337400563096
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7787622620399585711}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!114 &4995174424098701952
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -158,3 +187,20 @@ MonoBehaviour:
   valor: 1
   cura: 1
   coletaParticlesPrefab: {fileID: 0}
+--- !u!114 &7125582062409681285
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7787622620399585711}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69e2268aad109084da7bfa19fa1df7ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 3
+  valor: 1
+  cura: 1
+  lifeTime: 8
+  coletaParticlesPrefab: {fileID: 4858738369963547520, guid: 51b61dc6092333042b22ff688aa52a77, type: 3}

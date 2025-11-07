@@ -6,87 +6,82 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     [Header("Movimento")]
-    public float forwardSpeed = 5f;   // velocidade constante para frente
     public float jumpForce = 8f;
-    private Rigidbody2D rb;
-
-    [Header("Vida")]
-    public int maxHealth = 3;
-    public int currentHealth;
 
     [Header("Ground Check")]
     public Transform groundCheck;
     public float groundCheckRadius = 0.12f;
     public LayerMask groundLayer;
-    private bool isGrounded;
 
     [Header("FX")]
-    public GameObject coletaParticlesPrefab;
     public GameObject danoParticlesPrefab;
+    public Animator animator; // opcional
+
+    Rigidbody2D rb;
+    bool isGrounded;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        currentHealth = maxHealth;
     }
 
     void Update()
     {
-        // Verifica se está no chão
         if (groundCheck != null)
             isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
 
-        // Pulo
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
             rb.velocity = new Vector2(rb.velocity.x, 0f);
             rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+            if (animator != null) animator.SetTrigger("Jump");
+        }
+
+        // Mantém o jogador fixo no X
+        rb.velocity = new Vector2(0f, rb.velocity.y);
+
+        if (animator != null)
+        {
+            animator.SetBool("IsGrounded", isGrounded);
+            animator.SetFloat("VerticalSpeed", rb.velocity.y);
         }
     }
 
-    void FixedUpdate()
+    // Método existente que você já usa internamente
+    public void RecebeDano(int dano)
     {
-        // Movimento contínuo para frente
-        rb.velocity = new Vector2(forwardSpeed, rb.velocity.y);
-    }
+        if (GameManager.instance != null)
+            GameManager.instance.TomarDano(dano);
 
-    public void TakeDamage(int dmg)
-    {
-        currentHealth -= dmg;
         if (danoParticlesPrefab != null)
             Instantiate(danoParticlesPrefab, transform.position, Quaternion.identity);
 
-        if (currentHealth <= 0)
-            Die();
+        if (animator != null)
+            animator.SetTrigger("Hit");
     }
 
-    void Die()
+    // --- Método adicional para compatibilidade com scripts que chamam TakeDamage ---
+    // Apenas encaminha para RecebeDano para evitar duplicação de lógica.
+    public void TakeDamage(int damage)
     {
-        Debug.Log("Fofuxo morreu!");
-        gameObject.SetActive(false);
-        GameManager.instance.GameOver();
+        RecebeDano(damage);
     }
 
-    void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.CompareTag("Fruta"))
-        {
-            // Recupera vida
-            currentHealth = Mathf.Min(currentHealth + 1, maxHealth);
-
-            if (coletaParticlesPrefab != null)
-                Instantiate(coletaParticlesPrefab, transform.position, Quaternion.identity);
-
-            GameManager.instance.AddFruit(1);
-            Destroy(other.gameObject);
-        }
-    }
-
+    // Caso haja colisões normais (não trigger)
     void OnCollisionEnter2D(Collision2D col)
     {
         if (col.collider.CompareTag("Inimigo"))
         {
-            TakeDamage(1);
+            RecebeDano(1);
+        }
+    }
+
+    // Caso objetos usem trigger
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Inimigo"))
+        {
+            RecebeDano(1);
         }
     }
 }
