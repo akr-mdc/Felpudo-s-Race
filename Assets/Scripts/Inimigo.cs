@@ -4,17 +4,38 @@ using UnityEngine;
 
 public class Inimigo : MonoBehaviour
 {
+    public float speed = 3f;
+    public float lifetime = 6f;
     public int dano = 1;
 
-    void OnCollisionEnter2D(Collision2D col)
+    private void Start()
     {
-        if (col.gameObject.CompareTag("Player"))
+        Destroy(gameObject, lifetime);
+    }
+
+    private void Update()
+    {
+        transform.Translate(Vector2.left * speed * Time.deltaTime);
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        // Se colidir com o jogador, aplica dano via GameManager
+        if (collision.CompareTag("Player"))
         {
-            PlayerController player = col.gameObject.GetComponent<PlayerController>();
-            if (player != null)
+            if (GameManager.instance != null)
             {
-                player.TakeDamage(dano);
+                GameManager.instance.TomarDano(dano);
             }
+
+            Destroy(gameObject);
+        }
+
+        // Se colidir com o limite invisível, é destruído
+        if (collision.CompareTag("Limite"))
+        {
+            Destroy(gameObject);
         }
     }
 }
+

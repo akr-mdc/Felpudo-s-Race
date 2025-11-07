@@ -2,47 +2,35 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody2D))]
 public class EnemyMover : MonoBehaviour
 {
-    [Header("Configurações do inimigo")]
-    public float speed = 3f;           // velocidade para a esquerda
-    public int dano = 1;               // quanto de dano causa ao player
-    public float lifetime = 10f;       // tempo até ser destruído automaticamente
+    public float speed = 3f;
+    public float lifetime = 6f; // tempo até ser destruído
 
-    private Rigidbody2D rb;
-    private bool jaCausouDano = false; // impede dano múltiplo na mesma colisão
-
-    void Start()
+    private void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
-        Destroy(gameObject, lifetime); // destrói após um tempo
+        Destroy(gameObject, lifetime);
     }
 
-    void Update()
+    private void Update()
     {
-        rb.velocity = new Vector2(-speed, rb.velocity.y); // movimento lateral constante
+        transform.Translate(Vector2.left * speed * Time.deltaTime);
     }
 
-    void OnTriggerEnter2D(Collider2D other)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        // Colisão com jogador
-        if (other.CompareTag("Player") && !jaCausouDano)
+        // Dano ao player
+        if (collision.CompareTag("Player"))
         {
-            jaCausouDano = true;
-
-            PlayerController player = other.GetComponent<PlayerController>();
-            if (player != null)
+            if (GameManager.instance != null)
             {
-                player.TakeDamage(dano);
+                GameManager.instance.TomarDano(1);
             }
-
-            // (Opcional) destrói o inimigo logo após causar dano
             Destroy(gameObject);
         }
 
-        // Colisão com limite (fora da tela)
-        if (other.CompareTag("Limite"))
+        // Se atingir o limite invisível, é destruído
+        if (collision.CompareTag("Limite"))
         {
             Destroy(gameObject);
         }

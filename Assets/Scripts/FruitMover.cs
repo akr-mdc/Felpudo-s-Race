@@ -2,49 +2,39 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody2D))]
 public class FruitMover : MonoBehaviour
 {
     public float speed = 3f;
-    public int valor = 1;     // quantas frutas conta
-    public int cura = 1;      // vida recuperada ao coletar
-    public float lifeTime = 8f; // auto-destrói após x segundos
-    public GameObject coletaParticlesPrefab;
+    public float lifetime = 6f;
+    public int valorFruta = 1;
+    public int vidaRecuperada = 1;
 
-    Rigidbody2D rb;
-
-    void Start()
+    private void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
-        Destroy(gameObject, lifeTime);
+        Destroy(gameObject, lifetime);
     }
 
-    void Update()
+    private void Update()
     {
-        rb.velocity = new Vector2(-speed, rb.velocity.y);
+        transform.Translate(Vector2.left * speed * Time.deltaTime);
     }
 
-    void OnTriggerEnter2D(Collider2D other)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (other.CompareTag("Player"))
+        // Se tocar no jogador
+        if (collision.CompareTag("Player"))
         {
-            // contabiliza frutas usando o singleton (assegure que GameManager.instance existe)
             if (GameManager.instance != null)
-                GameManager.instance.AddFruit(valor);
-            else
-                Debug.LogWarning("FruitMover: GameManager.instance é nulo.");
-
-            // cura o player (se existir)
-            var player = other.GetComponent<PlayerController>();
-            if (player != null)
-                player.Curar(cura);
-
-            if (coletaParticlesPrefab != null)
-                Instantiate(coletaParticlesPrefab, transform.position, Quaternion.identity);
+            {
+                GameManager.instance.AddFruit(valorFruta);
+                GameManager.instance.RecuperarVida(vidaRecuperada);
+            }
 
             Destroy(gameObject);
         }
-        else if (other.CompareTag("Limite"))
+
+        // Se sair da tela
+        if (collision.CompareTag("Limite"))
         {
             Destroy(gameObject);
         }

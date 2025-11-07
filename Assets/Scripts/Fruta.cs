@@ -4,25 +4,20 @@ using UnityEngine;
 
 public class Fruta : MonoBehaviour
 {
-    [Header("Configuração da Fruta")]
-    public int valor = 1; // quantidade de frutas que conta para a vitória
-    public int cura = 1;  // quanto de vida recupera ao coletar
-    public GameObject coletaParticlesPrefab; // partículas opcionais
+    public int valorFruta = 1;   // Pontos de fruta
+    public int vidaRecuperada = 1; // Vida que o jogador recupera ao coletar
 
-    void OnTriggerEnter2D(Collider2D other)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (other.CompareTag("Player"))
+        if (collision.CompareTag("Player"))
         {
-            // Recupera vida e incrementa frutas no GameManager
-            GameManager.instance.RecuperarVida(cura);
-            GameManager.instance.AddFruit(valor);
+            if (GameManager.instance != null)
+            {
+                GameManager.instance.AddFruit(valorFruta);
+                GameManager.instance.RecuperarVida(vidaRecuperada);
+            }
 
-            // Instancia partículas de coleta
-            if (coletaParticlesPrefab != null)
-                Instantiate(coletaParticlesPrefab, transform.position, Quaternion.identity);
-
-            // Destroi o objeto
-            Destroy(gameObject);
+            Destroy(gameObject); // Destroi a fruta após coletar
         }
     }
 }

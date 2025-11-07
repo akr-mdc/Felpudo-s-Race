@@ -2,94 +2,42 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody2D))]
 public class PlayerController : MonoBehaviour
 {
-    [Header("Atributos do Jogador")]
-    public int vidaMaxima = 3;
-    public int vidaAtual;
-    public float forcaPulo = 8f;
-    public float invulnerabilidadeTempo = 1.0f;
-
-    [Header("Detecção de Chão")]
-    public Transform groundCheck;
-    public float groundCheckRadius = 0.2f;
-    public LayerMask groundLayer;
-
-    [Header("Efeitos e Sons (opcional)")]
-    public GameObject hitParticlesPrefab;
-    public AudioSource puloSom;
-    public AudioSource danoSom;
-    public AudioSource coletaSom;
-
+    [Header("Movimento")]
+    public float speed = 5f;
     private Rigidbody2D rb;
-    private bool estaNoChao;
-    private bool invulneravel = false;
-    private float tempoInvulneravel;
+    private Vector2 moveInput;
+
+    [Header("Dano e Vida")]
+    public int danoPorInimigo = 1;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        vidaAtual = vidaMaxima;
-        GameManager.instance.AtualizarVida(vidaAtual);
     }
 
     void Update()
     {
-        // Verifica chão
-        estaNoChao = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
+        // Movimento básico
+        moveInput.x = Input.GetAxisRaw("Horizontal");
+        moveInput.y = Input.GetAxisRaw("Vertical");
+        rb.velocity = moveInput.normalized * speed;
+    }
 
-        // Pulo
-        if (Input.GetButtonDown("Jump") && estaNoChao)
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        // Se colidir com inimigo, tomar dano
+        if (collision.CompareTag("Inimigo"))
         {
-            rb.velocity = new Vector2(rb.velocity.x, forcaPulo);
-            if (puloSom != null) puloSom.Play();
+            if (GameManager.instance != null)
+                GameManager.instance.TomarDano(danoPorInimigo);
         }
 
-        // Timer de invulnerabilidade
-        if (invulneravel && Time.time - tempoInvulneravel > invulnerabilidadeTempo)
-            invulneravel = false;
-    }
-
-    // Chamado pelos inimigos ao colidir
-    public void TakeDamage(int dano)
-    {
-        if (invulneravel) return;
-
-        vidaAtual -= dano;
-        if (vidaAtual < 0) vidaAtual = 0;
-
-        GameManager.instance.AtualizarVida(vidaAtual);
-
-        if (hitParticlesPrefab != null)
-            Instantiate(hitParticlesPrefab, transform.position, Quaternion.identity);
-
-        if (danoSom != null) danoSom.Play();
-
-        invulneravel = true;
-        tempoInvulneravel = Time.time;
-
-        if (vidaAtual <= 0)
-            GameManager.instance.GameOver();
-    }
-
-    // Chamado pelas frutas
-    public void Curar(int quantidade)
-    {
-        vidaAtual += quantidade;
-        if (vidaAtual > vidaMaxima) vidaAtual = vidaMaxima;
-
-        GameManager.instance.AtualizarVida(vidaAtual);
-
-        if (coletaSom != null) coletaSom.Play();
-    }
-
-    private void OnDrawGizmosSelected()
-    {
-        if (groundCheck != null)
+        // Se colidir com fruta, coletar (a fruta em si chama AddFruit)
+        if (collision.CompareTag("Fruta"))
         {
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
+            // Nada aqui — a fruta cuida disso
         }
     }
 }
