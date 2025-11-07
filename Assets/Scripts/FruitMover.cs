@@ -6,8 +6,7 @@ public class FruitMover : MonoBehaviour
 {
     public float speed = 3f;
     public float lifetime = 6f;
-    public int valorFruta = 1;
-    public int vidaRecuperada = 1;
+    public int cura = 1;
 
     private void Start()
     {
@@ -21,19 +20,16 @@ public class FruitMover : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        // Se tocar no jogador
         if (collision.CompareTag("Player"))
         {
             if (GameManager.instance != null)
             {
-                GameManager.instance.AddFruit(valorFruta);
-                GameManager.instance.RecuperarVida(vidaRecuperada);
+                GameManager.instance.AddFruit(1);
+                GameManager.instance.RecuperarVida(cura);
             }
-
             Destroy(gameObject);
         }
 
-        // Se sair da tela
         if (collision.CompareTag("Limite"))
         {
             Destroy(gameObject);

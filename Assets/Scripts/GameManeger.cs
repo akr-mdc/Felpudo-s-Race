@@ -3,94 +3,95 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
 using TMPro;
-using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
+    [Header("Status do Jogo")]
+    public int vidaMax = 3;
+    public int vidaAtual;
+    public int frutasColetadas = 0;
+    public int frutasParaVencer = 10;
+    private bool jogoAtivo = true;
+
     [Header("UI")]
     public TextMeshProUGUI vidaText;
     public TextMeshProUGUI frutasText;
-
-    [Header("Status do Jogo")]
-    public int vidaMaxima = 3;
-    private int vidaAtual;
-    private int frutasColetadas = 0;
+    public GameObject telaVitoria;
+    public GameObject telaDerrota;
 
     private void Awake()
     {
-        // Implementação do padrão Singleton
         if (instance == null)
-        {
             instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
         else
-        {
             Destroy(gameObject);
-            return;
-        }
     }
 
     private void Start()
     {
-        vidaAtual = vidaMaxima;
-        AtualizarVida();
-        AtualizarFrutas();
+        vidaAtual = vidaMax;
+        AtualizarUI();
     }
 
-    // =========================
-    // SISTEMA DE VIDA
-    // =========================
-    public void TomarDano(int dano)
+    private void AtualizarUI()
     {
-        vidaAtual -= dano;
-        if (vidaAtual < 0)
-            vidaAtual = 0;
+        if (vidaText != null)
+            vidaText.text = "Vida: " + vidaAtual.ToString();
 
-        AtualizarVida();
+        if (frutasText != null)
+            frutasText.text = "Frutas: " + frutasColetadas.ToString() + " / " + frutasParaVencer;
+    }
 
-        if (vidaAtual == 0)
+    public void TomarDano(int qtd)
+    {
+        if (!jogoAtivo) return;
+
+        vidaAtual -= qtd;
+        if (vidaAtual < 0) vidaAtual = 0;
+
+        AtualizarUI();
+
+        if (vidaAtual <= 0)
             GameOver();
     }
 
     public void RecuperarVida(int qtd)
     {
+        if (!jogoAtivo) return;
+
         vidaAtual += qtd;
-        if (vidaAtual > vidaMaxima)
-            vidaAtual = vidaMaxima;
+        if (vidaAtual > vidaMax) vidaAtual = vidaMax;
 
-        AtualizarVida();
+        AtualizarUI();
     }
 
-    private void AtualizarVida()
-    {
-        if (vidaText != null)
-            vidaText.text = "Vida: " + vidaAtual.ToString();
-    }
-
-    // =========================
-    // SISTEMA DE FRUTAS
-    // =========================
     public void AddFruit(int qtd)
     {
+        if (!jogoAtivo) return;
+
         frutasColetadas += qtd;
-        AtualizarFrutas();
+        AtualizarUI();
+
+        if (frutasColetadas >= frutasParaVencer)
+            Vencer();
     }
 
-    private void AtualizarFrutas()
+    private void Vencer()
     {
-        if (frutasText != null)
-            frutasText.text = "Frutas: " + frutasColetadas.ToString();
+        jogoAtivo = false;
+        if (telaVitoria != null)
+            telaVitoria.SetActive(true);
+        Time.timeScale = 0f;
     }
 
-    // =========================
-    // GAME OVER
-    // =========================
     private void GameOver()
     {
-        Debug.Log("Game Over!");
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        jogoAtivo = false;
+        if (telaDerrota != null)
+            telaDerrota.SetActive(true);
+        Time.timeScale = 0f;
     }
 }
+

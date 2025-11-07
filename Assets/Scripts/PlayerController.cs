@@ -5,39 +5,27 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     [Header("Movimento")]
-    public float speed = 5f;
+    public float jumpForce = 5f;
     private Rigidbody2D rb;
-    private Vector2 moveInput;
+    private bool isGrounded;
 
-    [Header("Dano e Vida")]
-    public int danoPorInimigo = 1;
+    [Header("Checagem de Solo")]
+    public Transform groundCheck;
+    public LayerMask groundLayer;
+    public float checkRadius = 0.2f;
 
-    void Start()
+    private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
     }
 
-    void Update()
+    private void Update()
     {
-        // Movimento básico
-        moveInput.x = Input.GetAxisRaw("Horizontal");
-        moveInput.y = Input.GetAxisRaw("Vertical");
-        rb.velocity = moveInput.normalized * speed;
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        // Se colidir com inimigo, tomar dano
-        if (collision.CompareTag("Inimigo"))
+        if (Input.GetButtonDown("Jump") && isGrounded)
         {
-            if (GameManager.instance != null)
-                GameManager.instance.TomarDano(danoPorInimigo);
+            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
         }
 
-        // Se colidir com fruta, coletar (a fruta em si chama AddFruit)
-        if (collision.CompareTag("Fruta"))
-        {
-            // Nada aqui — a fruta cuida disso
-        }
+        isGrounded = Physics2D.OverlapCircle(groundCheck.position, checkRadius, groundLayer);
     }
 }
