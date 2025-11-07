@@ -215,11 +215,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c6ec79d6595dcf4dbc9315d14be7657, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 5
-  jumpForce: 8
+  jumpForce: 10
   groundCheck: {fileID: 6042743448515781443}
   groundCheckRadius: 0.2
   groundLayer:
     serializedVersion: 2
     m_Bits: 256
-  maxHealth: 3
+  danoParticlesPrefab: {fileID: 0}
+  animator: {fileID: 0}

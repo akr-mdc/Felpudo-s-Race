@@ -157,7 +157,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 50, y: -50}
+  m_AnchoredPosition: {x: 110, y: -50}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &14176502
@@ -830,8 +830,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29cbcdbabab472f4a989f23d59a01e1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cam: {fileID: 519420028}
-  parallaxEffect: 1
+  speed: 4
 --- !u!1 &422731375
 GameObject:
   m_ObjectHideFlags: 0
@@ -1239,9 +1238,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba17208a7a6c00349ac2e0dfcee55ae4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 1745389463}
-  smoothSpeed: 0.15
-  offset: {x: 7, y: 0, z: 0}
+  startPosition: {x: 0, y: 0, z: -10}
+  moveSpeed: 1
+  moveHorizontally: 0
+  moveVertically: 0
 --- !u!1 &543002618
 GameObject:
   m_ObjectHideFlags: 0
@@ -1341,8 +1341,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29cbcdbabab472f4a989f23d59a01e1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cam: {fileID: 519420028}
-  parallaxEffect: 1
+  speed: 6
 --- !u!1 &633728155
 GameObject:
   m_ObjectHideFlags: 0
@@ -1442,8 +1441,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29cbcdbabab472f4a989f23d59a01e1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cam: {fileID: 519420028}
-  parallaxEffect: 2
+  speed: 16
 --- !u!1 &753746374
 GameObject:
   m_ObjectHideFlags: 0
@@ -1656,13 +1654,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7bf53c8f4ae9f84394c926549c92844, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inimigosPrefabs:
+  inimigos:
   - {fileID: 740005996008132915, guid: 6bdd79eb31a9efa4493c9d15fc444821, type: 3}
   frutaPrefab: {fileID: 7787622620399585711, guid: 0084db80df8f892498ad7e74428ea24b, type: 3}
-  minSpawnTime: 1
-  maxSpawnTime: 3
-  frutasPorInimigos: 4
-  spawnParent: {fileID: 0}
+  tempoMin: 4
+  tempoMax: 8
+  frutasACadaXInimigos: 4
 --- !u!1 &861525581
 GameObject:
   m_ObjectHideFlags: 0
@@ -1779,6 +1776,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5033727870632518172, guid: 4527984cafc62a14490b5430a1554854, type: 3}
+      propertyPath: jumpForce
+      value: 18
+      objectReference: {fileID: 0}
     - target: {fileID: 5064809224442079835, guid: 4527984cafc62a14490b5430a1554854, type: 3}
       propertyPath: m_Name
       value: Felpudo
@@ -1786,6 +1787,10 @@ PrefabInstance:
     - target: {fileID: 6736615986483491530, guid: 4527984cafc62a14490b5430a1554854, type: 3}
       propertyPath: m_Constraints
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6736615986483491530, guid: 4527984cafc62a14490b5430a1554854, type: 3}
+      propertyPath: m_GravityScale
+      value: 1.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1808,7 +1813,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1006228202
 Transform:
   m_ObjectHideFlags: 0
@@ -1818,7 +1823,7 @@ Transform:
   m_GameObject: {fileID: 1006228200}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 11, y: 0.57, z: -0.010935148}
+  m_LocalPosition: {x: 11, y: 2.6, z: -0.010935148}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1836,13 +1841,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7bf53c8f4ae9f84394c926549c92844, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inimigosPrefabs:
+  inimigos:
   - {fileID: 8026815665068269949, guid: b58b92bf99ee46445ae3da96f0f74234, type: 3}
   frutaPrefab: {fileID: 7787622620399585711, guid: 0084db80df8f892498ad7e74428ea24b, type: 3}
-  minSpawnTime: 1
-  maxSpawnTime: 3
-  frutasPorInimigos: 4
-  spawnParent: {fileID: 0}
+  tempoMin: 5.5
+  tempoMax: 11
+  frutasACadaXInimigos: 4
 --- !u!1 &1015014356
 GameObject:
   m_ObjectHideFlags: 0
@@ -1878,7 +1882,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 200, y: 50}
+  m_SizeDelta: {x: 400, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1015014358
 MonoBehaviour:
@@ -1927,13 +1931,13 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 72
+  m_fontSizeBase: 72
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 256
   m_textAlignment: 65535
@@ -2313,8 +2317,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29cbcdbabab472f4a989f23d59a01e1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cam: {fileID: 519420028}
-  parallaxEffect: 1
+  speed: 10
 --- !u!1 &1095347900
 GameObject:
   m_ObjectHideFlags: 0
@@ -2483,13 +2486,13 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 72
-  m_fontSizeBase: 72
+  m_fontSize: 108
+  m_fontSizeBase: 108
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 256
   m_textAlignment: 65535
@@ -2800,8 +2803,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29cbcdbabab472f4a989f23d59a01e1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cam: {fileID: 519420028}
-  parallaxEffect: 4
+  speed: 14
 --- !u!1 &1394789854
 GameObject:
   m_ObjectHideFlags: 0
@@ -2985,8 +2987,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29cbcdbabab472f4a989f23d59a01e1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cam: {fileID: 519420028}
-  parallaxEffect: 1
+  speed: 12
 --- !u!1 &1491027493
 GameObject:
   m_ObjectHideFlags: 0
@@ -3155,11 +3156,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!4 &1745389463 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4861504983511626698, guid: 4527984cafc62a14490b5430a1554854, type: 3}
-  m_PrefabInstance: {fileID: 935699518}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1827617939
 GameObject:
   m_ObjectHideFlags: 0
@@ -3395,8 +3391,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29cbcdbabab472f4a989f23d59a01e1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cam: {fileID: 519420028}
-  parallaxEffect: 1
+  speed: 2
 --- !u!1 &1945678431
 GameObject:
   m_ObjectHideFlags: 0
@@ -3580,8 +3575,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29cbcdbabab472f4a989f23d59a01e1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cam: {fileID: 519420028}
-  parallaxEffect: 1
+  speed: 8
 --- !u!1 &1985811451
 GameObject:
   m_ObjectHideFlags: 0
@@ -3765,8 +3759,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29cbcdbabab472f4a989f23d59a01e1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cam: {fileID: 519420028}
-  parallaxEffect: 1
+  speed: 16
 --- !u!1 &2102270638
 GameObject:
   m_ObjectHideFlags: 0

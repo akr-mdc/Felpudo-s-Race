@@ -186,7 +186,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   valor: 1
   cura: 1
-  coletaParticlesPrefab: {fileID: 0}
+  coletaParticlesPrefab: {fileID: 4858738369963547520, guid: 51b61dc6092333042b22ff688aa52a77, type: 3}
 --- !u!114 &7125582062409681285
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -202,5 +202,5 @@ MonoBehaviour:
   speed: 3
   valor: 1
   cura: 1
-  lifeTime: 8
+  lifeTime: 10
   coletaParticlesPrefab: {fileID: 4858738369963547520, guid: 51b61dc6092333042b22ff688aa52a77, type: 3}
