@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody2D))]
 public class FruitMover : MonoBehaviour
 {
     public float speed = 3f;
@@ -27,8 +28,16 @@ public class FruitMover : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            GameManager.instance?.AddFruta(valor);
-            GameManager.instance?.RecuperarVida(cura);
+            // contabiliza frutas usando o singleton (assegure que GameManager.instance existe)
+            if (GameManager.instance != null)
+                GameManager.instance.AddFruit(valor);
+            else
+                Debug.LogWarning("FruitMover: GameManager.instance é nulo.");
+
+            // cura o player (se existir)
+            var player = other.GetComponent<PlayerController>();
+            if (player != null)
+                player.Curar(cura);
 
             if (coletaParticlesPrefab != null)
                 Instantiate(coletaParticlesPrefab, transform.position, Quaternion.identity);

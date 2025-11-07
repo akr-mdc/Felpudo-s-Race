@@ -5,83 +5,91 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerController : MonoBehaviour
 {
-    [Header("Movimento")]
-    public float jumpForce = 8f;
+    [Header("Atributos do Jogador")]
+    public int vidaMaxima = 3;
+    public int vidaAtual;
+    public float forcaPulo = 8f;
+    public float invulnerabilidadeTempo = 1.0f;
 
-    [Header("Ground Check")]
+    [Header("Detecção de Chão")]
     public Transform groundCheck;
-    public float groundCheckRadius = 0.12f;
+    public float groundCheckRadius = 0.2f;
     public LayerMask groundLayer;
 
-    [Header("FX")]
-    public GameObject danoParticlesPrefab;
-    public Animator animator; // opcional
+    [Header("Efeitos e Sons (opcional)")]
+    public GameObject hitParticlesPrefab;
+    public AudioSource puloSom;
+    public AudioSource danoSom;
+    public AudioSource coletaSom;
 
-    Rigidbody2D rb;
-    bool isGrounded;
+    private Rigidbody2D rb;
+    private bool estaNoChao;
+    private bool invulneravel = false;
+    private float tempoInvulneravel;
 
-    void Awake()
+    void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        vidaAtual = vidaMaxima;
+        GameManager.instance.AtualizarVida(vidaAtual);
     }
 
     void Update()
     {
+        // Verifica chão
+        estaNoChao = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
+
+        // Pulo
+        if (Input.GetButtonDown("Jump") && estaNoChao)
+        {
+            rb.velocity = new Vector2(rb.velocity.x, forcaPulo);
+            if (puloSom != null) puloSom.Play();
+        }
+
+        // Timer de invulnerabilidade
+        if (invulneravel && Time.time - tempoInvulneravel > invulnerabilidadeTempo)
+            invulneravel = false;
+    }
+
+    // Chamado pelos inimigos ao colidir
+    public void TakeDamage(int dano)
+    {
+        if (invulneravel) return;
+
+        vidaAtual -= dano;
+        if (vidaAtual < 0) vidaAtual = 0;
+
+        GameManager.instance.AtualizarVida(vidaAtual);
+
+        if (hitParticlesPrefab != null)
+            Instantiate(hitParticlesPrefab, transform.position, Quaternion.identity);
+
+        if (danoSom != null) danoSom.Play();
+
+        invulneravel = true;
+        tempoInvulneravel = Time.time;
+
+        if (vidaAtual <= 0)
+            GameManager.instance.GameOver();
+    }
+
+    // Chamado pelas frutas
+    public void Curar(int quantidade)
+    {
+        vidaAtual += quantidade;
+        if (vidaAtual > vidaMaxima) vidaAtual = vidaMaxima;
+
+        GameManager.instance.AtualizarVida(vidaAtual);
+
+        if (coletaSom != null) coletaSom.Play();
+    }
+
+    private void OnDrawGizmosSelected()
+    {
         if (groundCheck != null)
-            isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
-
-        if (Input.GetButtonDown("Jump") && isGrounded)
         {
-            rb.velocity = new Vector2(rb.velocity.x, 0f);
-            rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
-            if (animator != null) animator.SetTrigger("Jump");
-        }
-
-        // Mantém o jogador fixo no X
-        rb.velocity = new Vector2(0f, rb.velocity.y);
-
-        if (animator != null)
-        {
-            animator.SetBool("IsGrounded", isGrounded);
-            animator.SetFloat("VerticalSpeed", rb.velocity.y);
-        }
-    }
-
-    // Método existente que você já usa internamente
-    public void RecebeDano(int dano)
-    {
-        if (GameManager.instance != null)
-            GameManager.instance.TomarDano(dano);
-
-        if (danoParticlesPrefab != null)
-            Instantiate(danoParticlesPrefab, transform.position, Quaternion.identity);
-
-        if (animator != null)
-            animator.SetTrigger("Hit");
-    }
-
-    // --- Método adicional para compatibilidade com scripts que chamam TakeDamage ---
-    // Apenas encaminha para RecebeDano para evitar duplicação de lógica.
-    public void TakeDamage(int damage)
-    {
-        RecebeDano(damage);
-    }
-
-    // Caso haja colisões normais (não trigger)
-    void OnCollisionEnter2D(Collision2D col)
-    {
-        if (col.collider.CompareTag("Inimigo"))
-        {
-            RecebeDano(1);
-        }
-    }
-
-    // Caso objetos usem trigger
-    void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.CompareTag("Inimigo"))
-        {
-            RecebeDano(1);
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
         }
     }
 }

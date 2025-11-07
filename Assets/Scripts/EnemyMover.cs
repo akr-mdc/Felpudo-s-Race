@@ -2,63 +2,48 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody2D))]
 public class EnemyMover : MonoBehaviour
 {
-    public float speed = 3f;
-    public int dano = 1;
-    public float lifeTime = 8f; // segundos até auto-destruição
-    public bool useTrigger = true; // se true, require Collider2D isTrigger = true
+    [Header("Configurações do inimigo")]
+    public float speed = 3f;           // velocidade para a esquerda
+    public int dano = 1;               // quanto de dano causa ao player
+    public float lifetime = 10f;       // tempo até ser destruído automaticamente
 
-    Rigidbody2D rb;
+    private Rigidbody2D rb;
+    private bool jaCausouDano = false; // impede dano múltiplo na mesma colisão
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        // schedule destruction
-        Destroy(gameObject, lifeTime);
+        Destroy(gameObject, lifetime); // destrói após um tempo
     }
 
     void Update()
     {
-        // move para a esquerda no eixo X (frame independent)
-        rb.velocity = new Vector2(-speed, rb.velocity.y);
+        rb.velocity = new Vector2(-speed, rb.velocity.y); // movimento lateral constante
     }
 
-    // se usarmos triggers:
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Player"))
+        // Colisão com jogador
+        if (other.CompareTag("Player") && !jaCausouDano)
         {
-            // causar dano ao jogador via GameManager/Player
-            if (other.TryGetComponent<PlayerController>(out var player))
-            {
-                player.RecebeDano(dano);
-            }
-            else
-            {
-                GameManager.instance?.TomarDano(dano);
-            }
-            Destroy(gameObject);
-        }
-        else if (other.CompareTag("Limite"))
-        {
-            Destroy(gameObject);
-        }
-    }
+            jaCausouDano = true;
 
-    // caso erro e estiver usando colisão normal:
-    void OnCollisionEnter2D(Collision2D col)
-    {
-        if (col.collider.CompareTag("Player"))
+            PlayerController player = other.GetComponent<PlayerController>();
+            if (player != null)
+            {
+                player.TakeDamage(dano);
+            }
+
+            // (Opcional) destrói o inimigo logo após causar dano
+            Destroy(gameObject);
+        }
+
+        // Colisão com limite (fora da tela)
+        if (other.CompareTag("Limite"))
         {
-            if (col.collider.TryGetComponent<PlayerController>(out var player))
-            {
-                player.RecebeDano(dano);
-            }
-            else
-            {
-                GameManager.instance?.TomarDano(dano);
-            }
             Destroy(gameObject);
         }
     }

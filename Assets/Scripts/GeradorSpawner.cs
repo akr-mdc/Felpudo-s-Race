@@ -4,47 +4,57 @@ using UnityEngine;
 
 public class GeradorSpawner : MonoBehaviour
 {
-    [Header("Prefabs")]
-    public GameObject[] inimigos;     // lista de inimigos possíveis
-    public GameObject frutaPrefab;    // prefab da fruta
+    [Header("Prefabs a serem gerados")]
+    public GameObject inimigoPrefab;
+    public GameObject frutaPrefab;
 
-    [Header("Configuração de Geração")]
-    public float tempoMin = 1.5f;     // intervalo mínimo entre gerações
-    public float tempoMax = 3.5f;     // intervalo máximo
-    public int frutasACadaXInimigos = 4; // gera 1 fruta a cada X inimigos gerados
+    [Header("Configurações de tempo")]
+    public float tempoMin = 1.5f;  // intervalo mínimo entre gerações
+    public float tempoMax = 3.5f;  // intervalo máximo entre gerações
 
-    private int contadorInimigos = 0;
+    [Header("Configurações de posição")]
+    public float posYMin = -2f;    // posição vertical mínima
+    public float posYMax = 2f;     // posição vertical máxima
+
+    [Header("Probabilidades de geração")]
+    [Range(0, 100)]
+    public int chanceDeFruta = 30; // porcentagem de chance de gerar fruta
+    // o restante (100 - chanceDeFruta) será chance de gerar inimigo
 
     void Start()
     {
-        StartCoroutine(Gerar());
+        StartCoroutine(GerarObjetos());
     }
 
-    System.Collections.IEnumerator Gerar()
+    System.Collections.IEnumerator GerarObjetos()
     {
         while (true)
         {
-            float tempoEspera = Random.Range(tempoMin, tempoMax);
-            yield return new WaitForSeconds(tempoEspera);
+            float tempo = Random.Range(tempoMin, tempoMax);
+            yield return new WaitForSeconds(tempo);
 
-            // Checa se é hora de gerar uma fruta
-            if (contadorInimigos >= frutasACadaXInimigos)
+            int sorteio = Random.Range(0, 100);
+
+            if (sorteio < chanceDeFruta && frutaPrefab != null)
             {
-                // Gera fruta e zera o contador
-                Instantiate(frutaPrefab, transform.position, Quaternion.identity);
-                contadorInimigos = 0;
-
-                // Importante: não gera inimigo nesse ciclo!
-                continue;
+                GerarFruta();
             }
-
-            // Caso contrário, gera um inimigo aleatório
-            if (inimigos.Length > 0)
+            else if (inimigoPrefab != null)
             {
-                int indice = Random.Range(0, inimigos.Length);
-                Instantiate(inimigos[indice], transform.position, Quaternion.identity);
-                contadorInimigos++;
+                GerarInimigo();
             }
         }
+    }
+
+    void GerarFruta()
+    {
+        Vector3 pos = new Vector3(transform.position.x, Random.Range(posYMin, posYMax), 0);
+        Instantiate(frutaPrefab, pos, Quaternion.identity);
+    }
+
+    void GerarInimigo()
+    {
+        Vector3 pos = new Vector3(transform.position.x, Random.Range(posYMin, posYMax), 0);
+        Instantiate(inimigoPrefab, pos, Quaternion.identity);
     }
 }

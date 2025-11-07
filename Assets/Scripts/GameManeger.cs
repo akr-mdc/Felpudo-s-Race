@@ -9,28 +9,26 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
-    [Header("Configurações")]
-    public int frutasColetadas = 0;
-    public int frutasParaVencer = 10;
-    public int vidaMaxima = 3;
-    public int vidaAtual;
-
-    [Header("UI (TextMeshProUGUI)")]
-    public TextMeshProUGUI frutasText;
-    public TextMeshProUGUI vidaText;
-
-    [Header("Telas")]
+    [Header("Referências de UI")]
+    public Text vidaText;
+    public Text frutasText;
     public GameObject telaVitoria;
     public GameObject telaDerrota;
 
-    bool jogoAtivo = true;
+    [Header("Configurações")]
+    public int frutasParaVencer = 10;
+    public int vidaMaxima = 3;
+
+    private int frutasColetadas = 0;
+    private int vidaAtual = 0;
+    private bool jogoAtivo = true;
 
     void Awake()
     {
         if (instance == null)
         {
             instance = this;
-            DontDestroyOnLoad(gameObject);
+            DontDestroyOnLoad(gameObject); // opcional
         }
         else Destroy(gameObject);
     }
@@ -38,71 +36,86 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         vidaAtual = Mathf.Clamp(vidaAtual, 0, vidaMaxima);
-        AtualizarUI();
+        AtualizarFrutas();
+        AtualizarVida(vidaAtual);
     }
 
-    public void AddFruta(int qtd)
+    // --- VIDA -------------------------------------------------
+    // Atualiza o texto de vida (passar nova vida)
+    public void AtualizarVida(int novaVida)
     {
-        if (!jogoAtivo) return;
-        frutasColetadas += qtd;
-        AtualizarUI();
-        if (frutasColetadas >= frutasParaVencer) Vitoria();
+        vidaAtual = Mathf.Clamp(novaVida, 0, vidaMaxima);
+        if (vidaText != null)
+            vidaText.text = "Vida: " + vidaAtual + "/" + vidaMaxima;
     }
 
-    public void AddFruit(int qtd)
+    // Sobre carga que atualiza com a vida atual (sem parâmetro)
+    public void AtualizarVida()
     {
-        AddFruta(qtd);
+        AtualizarVida(vidaAtual);
     }
 
-
+    // Recupera vida (usado por frutas)
     public void RecuperarVida(int qtd)
     {
         if (!jogoAtivo) return;
         vidaAtual = Mathf.Min(vidaAtual + qtd, vidaMaxima);
-        AtualizarUI();
+        AtualizarVida();
     }
 
-    public void TomarDano(int dano)
+    // Para compatibilidade: Curar -> RecuperarVida
+    public void Curar(int qtd)
+    {
+        RecuperarVida(qtd);
+    }
+
+    // --- FRUTAS -----------------------------------------------
+    // Versões compatíveis de AddFruit/AddFruta
+    public void AddFruit()
+    {
+        AddFruit(1);
+    }
+
+    public void AddFruit(int qtd)
     {
         if (!jogoAtivo) return;
-        vidaAtual -= dano;
-        AtualizarUI();
-        if (vidaAtual <= 0) Derrota();
+        frutasColetadas += qtd;
+        AtualizarFrutas();
+        if (frutasColetadas >= frutasParaVencer) Vitoria();
     }
 
-    public void AtualizarUI()
+    public void AddFruta(int qtd) { AddFruit(qtd); } // compatibilidade pt-br
+
+    void AtualizarFrutas()
     {
-        if (frutasText != null) frutasText.text = $"Frutas: {frutasColetadas}/{frutasParaVencer}";
-        if (vidaText != null) vidaText.text = $"Vida: {vidaAtual}/{vidaMaxima}";
+        if (frutasText != null)
+            frutasText.text = "Frutas: " + frutasColetadas + "/" + frutasParaVencer;
     }
 
-    void Vitoria()
+    // --- ESTADOS DO JOGO -------------------------------------
+    public void GameOver()
     {
+        if (!jogoAtivo) return;
         jogoAtivo = false;
-        Time.timeScale = 0f;
-        if (telaVitoria != null) telaVitoria.SetActive(true);
-        Debug.Log("VITÓRIA");
-    }
-
-    void Derrota()
-    {
-        jogoAtivo = false;
-        Time.timeScale = 0f;
         if (telaDerrota != null) telaDerrota.SetActive(true);
-        Debug.Log("DERROTA");
+        Time.timeScale = 0f;
     }
 
-    // métodos utilitários para UI (botões)
-    public void ReiniciarCena()
+    public void Vitoria()
+    {
+        if (!jogoAtivo) return;
+        jogoAtivo = false;
+        if (telaVitoria != null) telaVitoria.SetActive(true);
+        Time.timeScale = 0f;
+    }
+
+    // --- UTILITÁRIOS -----------------------------------------
+    public void ReiniciarJogo()
     {
         Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
-    public void IrMenu()
-    {
-        Time.timeScale = 1f;
-        // carregar cena de menu se houver (troque o nome)
-        SceneManager.LoadScene("MainMenu");
-    }
+    public int GetVidaAtual() => vidaAtual;
+    public int GetVidaMaxima() => vidaMaxima;
 }
